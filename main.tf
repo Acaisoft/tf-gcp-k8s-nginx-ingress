@@ -47,7 +47,7 @@ resource "helm_release" "cert_manager" {
     name      = "cert-manager"
     chart     = "stable/cert-manager"
     namespace = "${lookup(var.cert_manager, "namespace", "ingress-controller")}"
-    version   = "${lookup(var.cert_manager, "version", "v0.5.2")}"
+    version   = "${lookup(var.cert_manager, "version", "v0.6.7")}"
 }
 
 resource "helm_release" "cluster_issuer" {
@@ -55,7 +55,7 @@ resource "helm_release" "cluster_issuer" {
     repository   = "${helm_repository.certmanager_cluster_issuer.metadata.0.name}"
     chart        = "cm-cluster-issuer"
     namespace    = "${lookup(var.cluster_issuer, "namespace", "ingress-controller")}"
-    version      = "${lookup(var.cert_manager, "version", "0.1.0")}"
+    version      = "${lookup(var.cluster_issuer, "version", "0.1.0")}"
     values = [
         "${file(lookup(var.cluster_issuer, "values", "issuer-values.yaml"))}"
     ]
@@ -67,7 +67,7 @@ resource "helm_release" "nginx_ingress" {
     chart        = "stable/nginx-ingress"
     namespace    = "${lookup(var.nginx_ingress, "namespace", "ingress-controller")}"
     force_update = true
-    version      = "${lookup(var.cert_manager, "version", "1.3.1")}"
+    version      = "${lookup(var.nginx_ingress, "version", "1.3.1")}"
     values = [
         "${file(lookup(var.nginx_ingress, "values", "nginx-values.yaml"))}"
     ]
