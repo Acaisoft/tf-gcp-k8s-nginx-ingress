@@ -24,7 +24,9 @@ variable "gke_cluster_remote_state" {
 
 # Parameters authorized:
 # namespace (default: ingress-controller)
-# version (default: v0.5.2)
+# version (default: v0.12.0)
+# chart (default: jetstack/cluster-issuer )
+# values (default: cert-manager-values.yaml)
 variable "cert_manager" {
   type        = "map"
   description = "Cert manager configuration"

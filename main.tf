@@ -42,12 +42,19 @@ resource "helm_repository" "certmanager_cluster_issuer" {
     name = "certmanager-cluster-issuer"
     url  = "https://raw.githubusercontent.com/Acaisoft/certmanager-cluster-issuer/master/"
 }
+resource "helm_repository" "cert_manager" {
+    name = "jetstack"
+    url  = "https://charts.jetstack.io"
+}
 
 resource "helm_release" "cert_manager" {
     name      = "cert-manager"
-    chart     = "stable/cert-manager"
+    chart     = "${lookup(var.cert_manager, "chart", "jetstack/cert-manager")}"
     namespace = "${lookup(var.cert_manager, "namespace", "ingress-controller")}"
-    version   = "${lookup(var.cert_manager, "version", "v0.6.7")}"
+    version   = "${lookup(var.cert_manager, "version", "v0.12.0")}"
+    values = [
+        "${file(lookup(var.cert_manager, "values", "cert-manager-values.yaml"))}"
+    ]
 }
 
 resource "helm_release" "cluster_issuer" {
