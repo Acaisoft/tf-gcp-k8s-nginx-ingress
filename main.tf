@@ -40,7 +40,7 @@ provider "helm" {
 
 resource "helm_repository" "certmanager_cluster_issuer" {
     name = "certmanager-cluster-issuer"
-    url  = "https://raw.githubusercontent.com/Acaisoft/certmanager-cluster-issuer/master/"
+    url  = "https://raw.githubusercontent.com/Acaisoft/certmanager-cluster-issuer/v0.1.1/"
 }
 resource "helm_repository" "cert_manager" {
     name = "jetstack"
@@ -50,7 +50,7 @@ resource "helm_repository" "cert_manager" {
 resource "helm_release" "cert_manager" {
     name      = "cert-manager"
     chart     = "${lookup(var.cert_manager, "chart", "jetstack/cert-manager")}"
-    namespace = "${lookup(var.cert_manager, "namespace", "ingress-controller")}"
+    namespace = "${lookup(var.cert_manager, "namespace", "cert-manager")}"
     version   = "${lookup(var.cert_manager, "version", "v0.12.0")}"
     values = [
         "${file(lookup(var.cert_manager, "values", "cert-manager-values.yaml"))}"
@@ -61,8 +61,8 @@ resource "helm_release" "cluster_issuer" {
     name         = "cluster-issuer"
     repository   = "${helm_repository.certmanager_cluster_issuer.metadata.0.name}"
     chart        = "cm-cluster-issuer"
-    namespace    = "${lookup(var.cluster_issuer, "namespace", "ingress-controller")}"
-    version      = "${lookup(var.cluster_issuer, "version", "0.1.0")}"
+    namespace    = "${lookup(var.cluster_issuer, "namespace", "cert-manager")}"
+    version      = "${lookup(var.cluster_issuer, "version", "0.1.1")}"
     values = [
         "${file(lookup(var.cluster_issuer, "values", "issuer-values.yaml"))}"
     ]
